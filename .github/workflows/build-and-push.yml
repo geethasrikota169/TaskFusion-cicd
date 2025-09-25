@@ -40,8 +40,11 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: ./frontend # The context now points to the cloned frontend folder
+          # This new section injects the live backend URL into the build process
+          build-args: |
+            REACT_APP_BACKEND_URL=https://taskfusion-backend-vdg3.onrender.com
           push: true
-          tags: geetha169/taskfusion-frontend:latest
+          tags: your-dockerhub-username/taskfusion-frontend:latest # Remember to change this!
 
       # Step 6: Build and push the backend image
       # IMPORTANT: Replace 'your-dockerhub-username' with your actual Docker Hub username
@@ -50,4 +53,4 @@ jobs:
         with:
           context: ./backend # The context now points to the cloned backend folder
           push: true
-          tags: geetha169/taskfusion-backend:latest
+          tags: your-dockerhub-username/taskfusion-backend:latest # Remember to change this!
