@@ -9,48 +9,40 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Step 1: Check out the deployment repository itself
       - name: Checkout deployment repo
         uses: actions/checkout@v4
-
-      # Step 2: Clone the frontend repository into a folder named 'frontend'
       - name: Clone Frontend Repo
         uses: actions/checkout@v4
         with:
           repository: geethasrikota169/TaskFusion
           path: frontend
-
-      # Step 3: Clone the backend repository into a folder named 'backend'
       - name: Clone Backend Repo
         uses: actions/checkout@v4
         with:
           repository: geethasrikota169/TaskFusionFSADBackend
           path: backend
 
-      # Step 4: Log in to Docker Hub
       - name: Login to Docker Hub
         uses: docker/login-action@v3
         with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          username: ${{ secrets.DOCKORHUB_USERNAME }} # Note: Ensure this secret name is correct
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      # Step 5: Build and push the frontend image
-      # IMPORTANT: Replace 'your-dockerhub-username' with your actual Docker Hub username
       - name: Build and push frontend image
         uses: docker/build-push-action@v5
         with:
-          context: ./frontend # The context now points to the cloned frontend folder
-          # This new section injects the live backend URL into the build process
+          context: ./frontend
           build-args: |
             REACT_APP_BACKEND_URL=https://taskfusion-backend-vdg3.onrender.com
           push: true
-          tags: geetha169/taskfusion-frontend:latest # Remember to change this!
+          # THE FIX: We now use a unique tag based on the branch name
+          tags: geetha169/taskfusion-frontend:main
 
-      # Step 6: Build and push the backend image
-      # IMPORTANT: Replace 'your-dockerhub-username' with your actual Docker Hub username
       - name: Build and push backend image
         uses: docker/build-push-action@v5
         with:
-          context: ./backend # The context now points to the cloned backend folder
+          context: ./backend
           push: true
-          tags: geetha169/taskfusion-backend:latest # Remember to change this!
+          # THE FIX: We also use a unique tag here
+          tags: geetha169/taskfusion-backend:main
+
